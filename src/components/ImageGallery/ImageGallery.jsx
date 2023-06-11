@@ -26,9 +26,11 @@ function ImageGallery({ name }) {
           `https://pixabay.com/api/?q=${name}&page=${page}&key=35665373-98cf5b8f6eeff8ca0cc84fee2&image_type=photo&orientation=horizontal&per_page=12`
         );
         if (page === 1) {
-          setArticles(articles => articles = [...response.data.hits]);
+          setArticles(articles => (articles = [...response.data.hits]));
         } else {
-          setArticles(articles => articles = [...articles, ...response.data.hits]);
+          setArticles(
+            articles => (articles = [...articles, ...response.data.hits])
+          );
         }
       } catch (error) {
         console.log(error);
