@@ -10,7 +10,6 @@ import css from './ImageGallery.module.css';
 function ImageGallery({ name }) {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState('');
@@ -32,7 +31,6 @@ function ImageGallery({ name }) {
           setArticles([...articles, ...response.data.hits]);
         }
       } catch (error) {
-        setError(error);
         console.log(error);
       } finally {
         setIsLoading(false);
