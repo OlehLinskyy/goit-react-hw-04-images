@@ -10,43 +10,42 @@ import css from './ImageGallery.module.css';
 function ImageGallery({ name }) {
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [largeImageURL, setLargeImageURL] = useState('');
   const [user, setUser] = useState('');
+  const [query, setQuery] = useState({_name:'', _page: 1})
 
   useEffect(() => {
-    if (name.length === 0) {
+    if (!query._name) {
       return;
     }
-    setIsLoading(true);
-    setTimeout(async () => {
-      try {
-        const response = await axios.get(
-          `https://pixabay.com/api/?q=${name}&page=${page}&key=35665373-98cf5b8f6eeff8ca0cc84fee2&image_type=photo&orientation=horizontal&per_page=12`
-        );
-        if (page === 1) {
-          setArticles(articles => (articles = [...response.data.hits]));
-        } else {
-          setArticles(
-            articles => (articles = [...articles, ...response.data.hits])
+      setIsLoading(true);
+      setTimeout(async () => {
+        try {
+          const response = await axios.get(
+            `https://pixabay.com/api/?q=${query._name}&page=${query._page}&key=35665373-98cf5b8f6eeff8ca0cc84fee2&image_type=photo&orientation=horizontal&per_page=12`
           );
+          if (query._page === 1) {
+            setArticles(articles => (articles = [...response.data.hits]));
+          } else {
+            setArticles(
+              articles => (articles = [...articles, ...response.data.hits])
+            );
+          }
+        } catch (error) {
+          console.log(error);
+        } finally {
+          setIsLoading(false);
         }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    }, 1000);
-  }, [name, page]);
+      }, 1000);
+  }, [query]);
 
-  useEffect(() => {
-    setArticles([]);
-    setPage(1);
-  }, [name]);
+  useEffect(()=>{
+    setQuery({_name:name, _page:1})
+  },[name])
 
   const clickPage = () => {
-    setPage(page => page + 1);
+    setQuery(query => { return {_name: query._name, _page: query._page + 1}})
   };
 
   const toggleModal = () => {
